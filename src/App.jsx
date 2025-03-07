@@ -4,6 +4,7 @@ import {useEffect,  useState} from 'react'
 import Spinner from './components/spinner'
 import MovieCard from './components/movie-card';
 import { useDebounce } from 'react-use';
+import { updateSearchCount } from './appwrite.js';
 
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -13,7 +14,7 @@ const API_OPTIONS = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmYWFkZWNkNzJkYzIzNWE1ODExNDJhNDM2NzljODBjOCIsIm5iZiI6MTc0MDEzNzI0Ny4zODksInN1YiI6IjY3Yjg2MzFmNzQzNDIwMGMyODIyODQ0ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.0u3KXt59GywdPcFdrdNr7HNe7dc3WY0JXLnuhCHsSV0`
+    Authorization: `Bearer ${API_KEY}`
   }
 };
 
@@ -35,6 +36,8 @@ const App = () => {
     searchTerm  ]);
 
   const fetchMovies = async (query = '') => { 
+
+ 
     setIsLoading(true);
     setErrorMessage('');
      try { 
@@ -58,7 +61,7 @@ if(!response.ok){
   }
 
   setMoviesList(data.results || []);
-  
+   updateSearchCount();
 
      } catch (error) {
         setErrorMessage('Error fetching movies. Please try again later.');
@@ -74,7 +77,8 @@ if(!response.ok){
    
       }
   
-  }
+  
+    }
 
   useEffect(() => {
   fetchMovies(debouncedSearchTerm);
